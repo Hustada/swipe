@@ -26,7 +26,7 @@ class Deck extends Component {
 		const { position } = this.state;
 		const rotate = position.x.interpolate({
 			inputRange: [-500, 0, 500],
-			outputRange: ['120deg', '0deg', '120deg']
+			outputRange: ['-120deg', '0deg', '120deg']
 		});
 
 		return {
