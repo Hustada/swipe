@@ -94,7 +94,7 @@ resetPosition() {
 				return (
 					<Animated.View
 						key={item.id}
-						style={this.getCardStyle()}
+						style={[this.getCardStyle(), styles.cardStyle]}
 						{...this.state.panResponder.panHandlers}
 					>
 						{this.props.renderCard(item)}
@@ -102,9 +102,14 @@ resetPosition() {
 				);
 			}
 
-			return this.props.renderCard(item);
-		});
-	}
+			return (
+				<Animated.View key={item.id} style={styles.cardStyle}>
+					{this.props.renderCard(item)}
+				</Animated.View>
+				);
+		}).reverse();
+	} // reverse render so that cards stack in order(use Animated.View to prevent card flashing)
+
 
 	render() {
 		return (
@@ -115,5 +120,14 @@ resetPosition() {
 	}
 }
 
+//stack cards using absolute positioning
+const styles = {
+	cardStyle: {
+		position: 'absolute',
+		width: SCREEN_WIDTH
+	}
+};
+
 
 export default Deck;
+
