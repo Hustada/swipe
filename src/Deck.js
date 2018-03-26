@@ -3,7 +3,9 @@ import {
 	View,
 	Animated,
 	PanResponder,
-	Dimensions
+	Dimensions,
+	LayoutAnimation,
+	UIManager
 } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -38,6 +40,19 @@ class Deck extends Component {
 		});
 
 		this.state = { panResponder, position, index: 0 };
+	}
+
+//compare incoming data with existing props, reset index to 0 if not the same
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.data !== this.props.data) {
+			this.setState({index: 0});
+		}
+	}
+
+	componentWillUpdate() {
+		//if this function exists then call with a value of true(android)
+		UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+		LayoutAnimation.spring();
 	}
 
 // force swipe, if x is right then force SCREEN WIDTH(right) else -SCREEN WIDTH(left)
@@ -94,7 +109,7 @@ resetPosition() {
 				return (
 					<Animated.View
 						key={item.id}
-						style={[this.getCardStyle(), styles.cardStyle]}
+						style={[this.getCardStyle()]}
 						{...this.state.panResponder.panHandlers}
 					>
 						{this.props.renderCard(item)}
@@ -103,7 +118,9 @@ resetPosition() {
 			}
 
 			return (
-				<Animated.View key={item.id} style={styles.cardStyle}>
+				<Animated.View
+					key={item.id}
+					style={[styles.cardStyle, {top: 10 * (i - this.state.index) }]}>
 					{this.props.renderCard(item)}
 				</Animated.View>
 				);
